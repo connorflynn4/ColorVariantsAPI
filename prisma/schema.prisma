@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Color {
+  id         String   @id @default(cuid())
+  name       String
+  hex        String
+  rgb        String
+  category   String?
+  accessible Boolean  @default(false)
+  updatedAt  DateTime @updatedAt
+}
