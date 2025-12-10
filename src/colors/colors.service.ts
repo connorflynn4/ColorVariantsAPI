@@ -1,11 +1,31 @@
 import { Injectable } from '@nestjs/common';
+import { ColorsRepository } from './repository/colors.repository';
+import { GetColorsDto } from './dto/get-colors.dto';
 
 @Injectable()
 export class ColorsService {
-  getColors() {
-    return [
-      { id: 'blue-500', name: 'Blue 500', hex: '#3B82F6' },
-      { id: 'red-500', name: 'Red 500', hex: '#EF4444' },
-    ];
+  constructor(private repo: ColorsRepository) {}
+
+  async getColors(query: GetColorsDto) {
+    const colors = await this.repo.findAll();
+
+    let results = [...colors];
+
+    if (query.category) {
+      results = results.filter(c => c.category === query.category);
+    }
+
+    if (query.accessible !== undefined) {
+      results = results.filter(c => c.accessible === query.accessible);
+    }
+
+    if (query.search) {
+      const searchValue = query.search.toLowerCase();
+      results = results.filter(c =>
+        c.name.toLowerCase().includes(searchValue),
+      );
+    }
+
+    return results;
   }
 }
