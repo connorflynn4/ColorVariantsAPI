@@ -1,7 +1,8 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Post, Query, Body } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import { ColorsService } from './colors.service';
 import { GetColorsDto } from './dto/get-colors.dto';
+import { CreateColorDto } from './dto/create-color.dto';
 
 @ApiTags('colors')
 @Controller('colors')
@@ -16,5 +17,13 @@ export class ColorsController {
   @ApiQuery({ name: 'search', required: false, description: 'Search by color name' })
   getColors(@Query() query: GetColorsDto) {
     return this.colorsService.getColors(query);
+  }
+
+  @Post()
+  @ApiOperation({ summary: 'Create a new color' })
+  @ApiResponse({ status: 201, description: 'Color successfully created' })
+  @ApiResponse({ status: 400, description: 'Invalid input data' })
+  createColor(@Body() createColorDto: CreateColorDto) {
+    return this.colorsService.createColor(createColorDto);
   }
 }

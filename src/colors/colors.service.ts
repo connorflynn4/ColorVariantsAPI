@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ColorsRepository } from './repository/colors.repository';
 import { GetColorsDto } from './dto/get-colors.dto';
+import { CreateColorDto } from './dto/create-color.dto';
 
 @Injectable()
 export class ColorsService {
@@ -27,5 +28,9 @@ export class ColorsService {
     }
 
     return results;
+  }
+
+  async createColor(data: CreateColorDto) {
+    return this.repo.create(data);
   }
 }
