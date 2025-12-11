@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Query, Body } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
+import { Controller, Get, Post, Query, Body, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiSecurity } from '@nestjs/swagger';
 import { ColorsService } from './colors.service';
 import { GetColorsDto } from './dto/get-colors.dto';
 import { CreateColorDto } from './dto/create-color.dto';
+import { ApiKeyGuard } from '../common/guards/api-key.guard';
 
 @ApiTags('colors')
 @Controller('colors')
@@ -20,9 +21,12 @@ export class ColorsController {
   }
 
   @Post()
-  @ApiOperation({ summary: 'Create a new color' })
+  @UseGuards(ApiKeyGuard)
+  @ApiSecurity('api-key')
+  @ApiOperation({ summary: 'Create a new color (requires API key)' })
   @ApiResponse({ status: 201, description: 'Color successfully created' })
   @ApiResponse({ status: 400, description: 'Invalid input data' })
+  @ApiResponse({ status: 401, description: 'Unauthorized - Invalid or missing API key' })
   createColor(@Body() createColorDto: CreateColorDto) {
     return this.colorsService.createColor(createColorDto);
   }

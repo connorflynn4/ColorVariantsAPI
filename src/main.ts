@@ -61,6 +61,15 @@ async function bootstrap() {
       .setDescription('API for managing color variants with filtering capabilities')
       .setVersion('1.0')
       .addTag('colors')
+      .addApiKey(
+        {
+          type: 'apiKey',
+          name: 'X-API-Key',
+          in: 'header',
+          description: 'API key for write operations',
+        },
+        'api-key',
+      )
       .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup(`${apiPrefix}/docs`, app, document);

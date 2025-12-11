@@ -25,6 +25,43 @@
 
 Color Variants API - A NestJS API for managing color variants with filtering capabilities.
 
+## Quick Start
+
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+2. **Set up environment:**
+   ```bash
+   cp .env.example .env
+   ```
+
+3. **Generate an API key:**
+   ```bash
+   npm run generate:api-key
+   ```
+   Copy the generated key and add it to your `.env` file:
+   ```bash
+   API_KEYS=cvk_your_generated_key_here
+   ```
+
+4. **Set up database:**
+   ```bash
+   npx prisma migrate dev
+   npx prisma db seed  # Optional: seed with sample data
+   ```
+
+5. **Start the server:**
+   ```bash
+   npm run start:dev
+   ```
+
+6. **Access the API:**
+   - API: `http://localhost:3000/api`
+   - Swagger Docs: `http://localhost:3000/api/docs`
+   - Health Check: `http://localhost:3000/api/health`
+
 ## Project setup
 
 ```bash
@@ -56,6 +93,7 @@ API_PREFIX=api
 - `CORS_ORIGIN` - CORS allowed origins (comma-separated for production, default: *)
 - `THROTTLE_TTL` - Rate limit time window in seconds (default: 60)
 - `THROTTLE_LIMIT` - Maximum requests per time window (default: 100)
+- `API_KEYS` - Comma-separated list of valid API keys for write operations (required for POST/PUT/DELETE)
 
 ## Features
 
@@ -71,10 +109,64 @@ API_PREFIX=api
 
 ## API Endpoints
 
-- `GET /api/colors` - Get all colors with optional filtering
+- `GET /api/colors` - Get all colors with optional filtering - **Public**
   - Query params: `category`, `accessible`, `search`
+- `POST /api/colors` - Create a new color - **Requires API Key**
 - `GET /api/health` - Health check endpoint
 - `GET /api/docs` - Swagger API documentation (development only)
+
+## API Key Authentication
+
+Write operations (POST, PUT, DELETE) require an API key for authentication.
+
+### Generating an API Key
+
+```bash
+npm run generate:api-key
+```
+
+This will generate a secure API key like: `cvk_abc123...`
+
+### Adding API Keys
+
+Add the generated key(s) to your `.env` file:
+
+```bash
+API_KEYS=cvk_your_generated_key_here
+```
+
+For multiple keys, separate them with commas:
+
+```bash
+API_KEYS=cvk_key1,cvk_key2,cvk_key3
+```
+
+### Using API Keys
+
+Include the API key in your requests using one of these methods:
+
+**Option 1: X-API-Key header (recommended)**
+```bash
+curl -X POST http://localhost:3000/api/colors \
+  -H "X-API-Key: cvk_your_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Ocean Blue","hex":"#0066CC","rgb":"rgb(0, 102, 204)"}'
+```
+
+**Option 2: Authorization Bearer header**
+```bash
+curl -X POST http://localhost:3000/api/colors \
+  -H "Authorization: Bearer cvk_your_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Ocean Blue","hex":"#0066CC","rgb":"rgb(0, 102, 204)"}'
+```
+
+### Security Notes
+
+- ✅ **Read operations (GET)** are public and don't require authentication
+- 🔒 **Write operations (POST/PUT/DELETE)** require a valid API key
+- 🔑 API keys are stored in environment variables - never commit them to git
+- 🚫 Invalid or missing API keys will return `401 Unauthorized`
 
 ## Compile and run the project
 
