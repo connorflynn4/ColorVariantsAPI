@@ -23,13 +23,58 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Color Variants API - A NestJS API for managing color variants with filtering capabilities.
 
 ## Project setup
 
 ```bash
 $ npm install
 ```
+
+## Environment Configuration
+
+Create a `.env` file in the root directory based on `.env.example`:
+
+```bash
+# Server Configuration
+PORT=3000
+NODE_ENV=development
+
+# Database Configuration
+DATABASE_URL=file:./dev.db
+
+# API Configuration
+API_PREFIX=api
+```
+
+### Environment Variables
+
+- `PORT` - Server port (default: 3000)
+- `NODE_ENV` - Environment mode (development, production, test)
+- `DATABASE_URL` - Database connection URL (default: file:./dev.db)
+- `API_PREFIX` - API route prefix (default: api)
+- `CORS_ORIGIN` - CORS allowed origins (comma-separated for production, default: *)
+- `THROTTLE_TTL` - Rate limit time window in seconds (default: 60)
+- `THROTTLE_LIMIT` - Maximum requests per time window (default: 100)
+
+## Features
+
+- ✅ **Environment Configuration** - Centralized config management with `.env` files
+- ✅ **Error Handling** - Global exception filter with standardized error responses
+- ✅ **Logging** - Request/response logging with NestJS Logger
+- ✅ **Security** - Helmet security headers and configurable CORS
+- ✅ **Rate Limiting** - Protection against API abuse
+- ✅ **Health Checks** - `/health` endpoint for monitoring
+- ✅ **API Documentation** - Swagger/OpenAPI docs at `/api/docs` (dev only)
+- ✅ **Graceful Shutdown** - Proper cleanup on SIGTERM/SIGINT
+- ✅ **Input Validation** - DTO validation with class-validator
+
+## API Endpoints
+
+- `GET /api/colors` - Get all colors with optional filtering
+  - Query params: `category`, `accessible`, `search`
+- `GET /api/health` - Health check endpoint
+- `GET /api/docs` - Swagger API documentation (development only)
 
 ## Compile and run the project
 
